@@ -22,7 +22,8 @@
         <nav class="navbar">
             <a href="#home" class="active">Home</a>
             <a href="projects.html">Projects</a>
-            <a href="#contact">Contact</a>
+            <!-- href is the no-JS fallback; the script upgrades it to the modal. -->
+            <a href="mailto:aasantosa.93@gmail.com" data-open-contact>Contact</a>
         </nav>
     </header>
 
@@ -33,7 +34,7 @@
             <p>I turn real operational needs into focused software, connecting systems and data to make complex work clearer.</p>
 
             <div class="btn-group">
-                <a href="#contact" class="btn">Contact Me</a>
+                <a href="mailto:aasantosa.93@gmail.com" data-open-contact class="btn">Contact Me</a>
                 <!-- Was "Download CV" pointing nowhere. Restore it by dropping
                      cv.pdf in this folder and setting href="cv.pdf" download. -->
                 <a href="projects.html" class="btn">View Projects</a>
@@ -48,12 +49,16 @@
             <div class="social-icons">
                 <a href="https://github.com/BBexe" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="bx bxl-github"></i></a>
                 <a href="https://www.linkedin.com/in/alberto-santos-alcala-6935341b7" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="bx bxl-linkedin"></i></a>
-                <a href="mailto:aasantosa.93@gmail.com" aria-label="Email"><i class="bx bx-envelope"></i></a>
+                <a href="mailto:aasantosa.93@gmail.com" data-open-contact aria-label="Email"><i class="bx bx-envelope"></i></a>
             </div>
         </div>
     </section>
 
-    <section class="contact" id="contact">
+    <!-- Native <dialog>: gives the backdrop, Esc-to-close and focus trapping
+         for free. Hidden until a trigger calls showModal(). -->
+    <dialog class="contact-modal" id="contact">
+        <button type="button" class="modal-close" aria-label="Close contact form">&times;</button>
+
         <h2>Contact <span>Me</span></h2>
         <p class="contact-lead">
             Open to software engineering roles. Write below, or email me directly at
@@ -63,9 +68,6 @@
         <!-- Web3Forms: the access key is public by design. It only authorises
              delivery to the inbox that registered it, so it cannot be abused
              to send mail anywhere else. -->
-        <details class="contact-toggle">
-            <summary class="btn">Write me a message</summary>
-
         <form class="contact-form" action="https://api.web3forms.com/submit" method="POST">
             <input type="hidden" name="access_key" value="REPLACE_WITH_WEB3FORMS_ACCESS_KEY">
             <input type="hidden" name="subject" value="New message from your portfolio">
@@ -91,8 +93,7 @@
             <button type="submit" class="btn">Send Message</button>
             <p class="form-status" role="status" aria-live="polite"></p>
         </form>
-        </details>
-    </section>
+    </dialog>
 
     <script>
         // Progressive enhancement: without JS the form still posts natively and
@@ -102,13 +103,30 @@
             var status = document.querySelector('.form-status');
             if (!form || !status) return;
 
-            // Open the panel when someone arrives via the hero's "Contact Me".
-            var panel = document.querySelector('.contact-toggle');
-            function openPanel() {
-                if (panel && location.hash === '#contact') panel.open = true;
+            var modal = document.querySelector('.contact-modal');
+
+            // Only hijack the mailto links if <dialog> is actually supported.
+            if (modal && typeof modal.showModal === 'function') {
+                Array.prototype.forEach.call(
+                    document.querySelectorAll('[data-open-contact]'),
+                    function (trigger) {
+                        trigger.addEventListener('click', function (event) {
+                            event.preventDefault();
+                            modal.showModal();
+                        });
+                    }
+                );
+
+                modal.querySelector('.modal-close').addEventListener('click', function () {
+                    modal.close();
+                });
+
+                // Clicking the backdrop lands on the <dialog> itself, never on
+                // its children, so this closes without catching inside clicks.
+                modal.addEventListener('click', function (event) {
+                    if (event.target === modal) modal.close();
+                });
             }
-            openPanel();
-            window.addEventListener('hashchange', openPanel);
 
             form.addEventListener('submit', function (event) {
                 event.preventDefault();

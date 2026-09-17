@@ -590,20 +590,52 @@ span{
 }
 
 /* ==========================================================================
-   Contact section
+   Contact modal
    ========================================================================== */
 
-.contact{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.contact-modal{
+    /* A closed <dialog> is display:none, so the whole block stays out of the
+       page until showModal() runs. No extra hiding needed. */
+    position: relative;
+    /* The browser centres a <dialog> with margin:auto, but the global
+       `* { margin: 0 }` reset wipes it out. Put it back explicitly. */
+    margin: auto;
+    width: min(92vw, 620px);
+    padding: 5rem 4rem 4rem;
+    background: var(--second-bg-color);
+    border: 1px solid #2a2a2a;
+    border-radius: 1.6rem;
+    box-shadow: 0 0 60px rgba(216,206,253,0.12);
+    color: var(--text-color);
     text-align: center;
-    min-height: auto;
-    padding-bottom: 12rem;
+    overflow-y: auto;
+    max-height: 90vh;
 }
 
-.contact h2{
-    font-size: 4.5rem;
+.contact-modal::backdrop{
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
+}
+
+.modal-close{
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+    font-size: 3.2rem;
+    line-height: 1;
+    background: transparent;
+    color: #8a8a8a;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.modal-close:hover{
+    color: var(--main-color);
+    transform: scale(1.15);
+}
+
+.contact-modal h2{
+    font-size: 3.6rem;
     font-weight: 600;
 }
 
@@ -626,8 +658,7 @@ span{
 
 .contact-form{
     width: 100%;
-    max-width: 620px;
-    margin-top: 4rem;
+    margin-top: 3rem;
     text-align: left;
 }
 
@@ -697,31 +728,3 @@ span{
     }
 }
 
-/* Collapsed by default; <summary> is the reveal button. No JS needed. */
-.contact-toggle{
-    width: 100%;
-    max-width: 620px;
-    margin-top: 3rem;
-    text-align: center;
-}
-
-.contact-toggle > summary{
-    list-style: none;
-    display: inline-block;
-}
-
-.contact-toggle > summary::-webkit-details-marker{
-    display: none;
-}
-
-.contact-toggle[open] > summary{
-    background-color: black;
-    color: var(--main-color);
-    border: 2px solid var(--main-color);
-    box-shadow: 0 0 25px transparent;
-}
-
-.contact-toggle .contact-form{
-    margin-top: 3rem;
-    animation: reveal 0.35s ease;
-}
