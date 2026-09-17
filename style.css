@@ -280,7 +280,8 @@ span{
 
 .text-animation span::before{
     font-family: "Orbitron", sans-serif;
-    content: "Web Developer";
+    /* Static fallback shown before the animation starts. */
+    content: "Software Engineer";
     color: var(--main-color2);
     animation: words 20s infinite;
 }
@@ -305,23 +306,23 @@ span{
 @keyframes words{
     0%,
     20%{
-        content: "Frontend Designer";
+        content: "Software Engineer";
     }
     21%,
     40%{
-        content: "Web Designer";
+        content: "Product Engineer";
     }
     41%,
     60%{
-        content: "UI /UX Designer";
+        content: "Systems Integrator";
     }
     61%,
     80%{
-        content: "Web Developer";
+        content: "Data Analyst";
     }
     81%,
     100%{
-        content: "999";
+        content: "JavaScript Developer";
     }
 
 }
