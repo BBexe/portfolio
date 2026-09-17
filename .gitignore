@@ -1,0 +1,4 @@
+# Krita working files and editor backups — source art, not site assets
+*.kra
+*-autosave.kra
+*~
