@@ -696,3 +696,32 @@ span{
         font-size: 3.4rem;
     }
 }
+
+/* Collapsed by default; <summary> is the reveal button. No JS needed. */
+.contact-toggle{
+    width: 100%;
+    max-width: 620px;
+    margin-top: 3rem;
+    text-align: center;
+}
+
+.contact-toggle > summary{
+    list-style: none;
+    display: inline-block;
+}
+
+.contact-toggle > summary::-webkit-details-marker{
+    display: none;
+}
+
+.contact-toggle[open] > summary{
+    background-color: black;
+    color: var(--main-color);
+    border: 2px solid var(--main-color);
+    box-shadow: 0 0 25px transparent;
+}
+
+.contact-toggle .contact-form{
+    margin-top: 3rem;
+    animation: reveal 0.35s ease;
+}

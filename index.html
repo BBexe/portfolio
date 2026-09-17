@@ -63,6 +63,9 @@
         <!-- Web3Forms: the access key is public by design. It only authorises
              delivery to the inbox that registered it, so it cannot be abused
              to send mail anywhere else. -->
+        <details class="contact-toggle">
+            <summary class="btn">Write me a message</summary>
+
         <form class="contact-form" action="https://api.web3forms.com/submit" method="POST">
             <input type="hidden" name="access_key" value="REPLACE_WITH_WEB3FORMS_ACCESS_KEY">
             <input type="hidden" name="subject" value="New message from your portfolio">
@@ -88,6 +91,7 @@
             <button type="submit" class="btn">Send Message</button>
             <p class="form-status" role="status" aria-live="polite"></p>
         </form>
+        </details>
     </section>
 
     <script>
@@ -98,8 +102,29 @@
             var status = document.querySelector('.form-status');
             if (!form || !status) return;
 
+            // Open the panel when someone arrives via the hero's "Contact Me".
+            var panel = document.querySelector('.contact-toggle');
+            function openPanel() {
+                if (panel && location.hash === '#contact') panel.open = true;
+            }
+            openPanel();
+            window.addEventListener('hashchange', openPanel);
+
             form.addEventListener('submit', function (event) {
                 event.preventDefault();
+
+                // Safety net: until the real access key is in place, hand the
+                // message to the visitor's mail client instead of failing.
+                var key = form.querySelector('[name="access_key"]').value;
+                if (key.indexOf('REPLACE_WITH') === 0) {
+                    window.location.href = 'mailto:aasantosa.93@gmail.com'
+                        + '?subject=' + encodeURIComponent('Portfolio enquiry from ' + form.name.value)
+                        + '&body=' + encodeURIComponent(form.message.value);
+                    status.textContent = 'Opening your email app. You can also write to aasantosa.93@gmail.com directly.';
+                    status.className = 'form-status';
+                    return;
+                }
+
                 status.textContent = 'Sending...';
                 status.className = 'form-status';
 
