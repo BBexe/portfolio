@@ -22,7 +22,7 @@
         <nav class="navbar">
             <a href="#home" class="active">Home</a>
             <a href="projects.html">Projects</a>
-            <a href="mailto:aasantosa.93@gmail.com">Contact</a>
+            <a href="#contact">Contact</a>
         </nav>
     </header>
 
@@ -33,7 +33,7 @@
             <p>I turn real operational needs into focused software, connecting systems and data to make complex work clearer.</p>
 
             <div class="btn-group">
-                <a href="mailto:aasantosa.93@gmail.com" class="btn">Contact Me</a>
+                <a href="#contact" class="btn">Contact Me</a>
                 <!-- Was "Download CV" pointing nowhere. Restore it by dropping
                      cv.pdf in this folder and setting href="cv.pdf" download. -->
                 <a href="projects.html" class="btn">View Projects</a>
@@ -52,5 +52,79 @@
             </div>
         </div>
     </section>
+
+    <section class="contact" id="contact">
+        <h2>Contact <span>Me</span></h2>
+        <p class="contact-lead">
+            Open to software engineering roles. Write below, or email me directly at
+            <a href="mailto:aasantosa.93@gmail.com">aasantosa.93@gmail.com</a>.
+        </p>
+
+        <!-- Web3Forms: the access key is public by design. It only authorises
+             delivery to the inbox that registered it, so it cannot be abused
+             to send mail anywhere else. -->
+        <form class="contact-form" action="https://api.web3forms.com/submit" method="POST">
+            <input type="hidden" name="access_key" value="REPLACE_WITH_WEB3FORMS_ACCESS_KEY">
+            <input type="hidden" name="subject" value="New message from your portfolio">
+
+            <!-- Honeypot: invisible to people, tempting to bots. -->
+            <input type="checkbox" name="botcheck" class="hidden" style="display:none;" tabindex="-1" autocomplete="off">
+
+            <div class="form-row">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Your name" required>
+            </div>
+
+            <div class="form-row">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="you@company.com" required>
+            </div>
+
+            <div class="form-row">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" rows="5" placeholder="What would you like to talk about?" required></textarea>
+            </div>
+
+            <button type="submit" class="btn">Send Message</button>
+            <p class="form-status" role="status" aria-live="polite"></p>
+        </form>
+    </section>
+
+    <script>
+        // Progressive enhancement: without JS the form still posts natively and
+        // lands on the Web3Forms confirmation page. With JS the visitor stays here.
+        (function () {
+            var form = document.querySelector('.contact-form');
+            var status = document.querySelector('.form-status');
+            if (!form || !status) return;
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                status.textContent = 'Sending...';
+                status.className = 'form-status';
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: { Accept: 'application/json' }
+                })
+                    .then(function (response) { return response.json(); })
+                    .then(function (data) {
+                        if (data.success) {
+                            status.textContent = 'Thanks. Your message is on its way.';
+                            status.className = 'form-status is-ok';
+                            form.reset();
+                        } else {
+                            status.textContent = data.message || 'Something went wrong. Please email me directly.';
+                            status.className = 'form-status is-error';
+                        }
+                    })
+                    .catch(function () {
+                        status.textContent = 'Network error. Please email me directly.';
+                        status.className = 'form-status is-error';
+                    });
+            });
+        })();
+    </script>
 </body>
 </html>
