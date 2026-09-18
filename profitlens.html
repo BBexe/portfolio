@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ProfitLens — a real-time profit analytics dashboard for multi-platform restaurants. Case study by Alberto Santos.">
+    <title>ProfitLens | Alberto Santos</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Poppins:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <a href="index.html" class="logo">Alberto <span>Santos</span></a>
+
+        <i class="bx bx-menu" id="menu-icon"></i>
+
+        <nav class="navbar">
+            <a href="index.html">Home</a>
+            <a href="projects.html" class="active">Projects</a>
+            <a href="mailto:aasantosa.93@gmail.com">Contact</a>
+        </nav>
+    </header>
+
+    <article class="case">
+        <p class="case-back"><a href="projects.html">&larr; Back to all work</a></p>
+
+        <header class="case-head">
+            <p class="case-eyebrow">01 / Operations &amp; Data Integration</p>
+            <h1>ProfitLens</h1>
+            <p class="case-standfirst">
+                A real-time profit analytics dashboard for restaurants selling across
+                Deliveroo, Uber Eats and their own counter. It answers a question no
+                single platform can: what did we actually earn on that order?
+            </p>
+
+            <div class="case-links">
+                <a class="btn" href="https://profitlens-dashboard.vercel.app" target="_blank" rel="noopener noreferrer">Live demo</a>
+                <a class="btn" href="https://github.com/BBexe/profitlens-dashboard" target="_blank" rel="noopener noreferrer">Source code</a>
+            </div>
+
+            <ul class="case-meta">
+                <li><span>Role</span> Sole developer</li>
+                <li><span>Context</span> Final Year Project, BSc Computer Science, Goldsmiths</li>
+                <li><span>Status</span> Deployed and processing live webhooks</li>
+            </ul>
+        </header>
+
+        <div class="case-stats">
+            <div><strong>1,000</strong><span>seeded orders</span></div>
+            <div><strong>125</strong><span>unit tests</span></div>
+            <div><strong>20</strong><span>SQL migrations</span></div>
+            <div><strong>3</strong><span>data layers</span></div>
+        </div>
+
+        <section class="case-section">
+            <h2>The problem</h2>
+            <p>
+                A restaurant takes orders from Deliveroo, Uber Eats, Just Eat and its own
+                point of sale. Every platform has its own dashboard, its own commission
+                structure, and its own way of presenting numbers.
+            </p>
+            <p>
+                Revenue looks healthy on every one of those screens. But <strong>nobody knows
+                real profit until the end of the month</strong>, when the platform invoices arrive
+                and the commissions are finally subtracted. Until then, managers are guessing —
+                and they are guessing about which dishes and which channels are actually
+                worth selling.
+            </p>
+            <p>
+                The gap is structural. No platform can tell you your margin, because no
+                platform knows your food costs, and none of them know what the others charge you.
+            </p>
+        </section>
+
+        <section class="case-section">
+            <h2>What it does</h2>
+            <p>
+                ProfitLens connects to <a href="https://www.hubrise.com/" target="_blank" rel="noopener noreferrer">HubRise</a>,
+                a middleware layer that sits between point-of-sale systems and delivery
+                platforms and unifies every order stream into a single event feed. ProfitLens
+                subscribes to that feed by webhook and computes true profit on each order as
+                it arrives.
+            </p>
+            <ul class="case-list">
+                <li>Receives orders in real time and calculates commission at the moment of ingestion</li>
+                <li>Matches every line item against the product catalogue by SKU to attach food costs</li>
+                <li>Shows KPIs, revenue trends, per-platform and per-category margins, and an hourly heatmap</li>
+                <li>Generates daily reports with manager notes, email delivery and CSV export</li>
+                <li>Flags data quality problems — unknown platforms, unmatched items — in a pipeline monitor</li>
+            </ul>
+        </section>
+
+        <section class="case-section">
+            <h2>Architecture</h2>
+            <p>
+                The data model follows the <strong>medallion pattern</strong> from data engineering:
+                three layers, each with one job.
+            </p>
+
+            <div class="layer-grid">
+                <div class="layer">
+                    <span class="layer-tag">Bronze</span>
+                    <h3>raw_webhooks</h3>
+                    <p>
+                        The unmodified HubRise payload, stored as <code>JSONB</code>, one row per
+                        webhook received regardless of outcome. Never modified after insert.
+                    </p>
+                    <p class="layer-why">
+                        If parsing logic changes, the original event is still there to reprocess.
+                        An accountant who receives a bad invoice does not throw the original away.
+                    </p>
+                </div>
+
+                <div class="layer">
+                    <span class="layer-tag">Silver</span>
+                    <h3>orders + order_items</h3>
+                    <p>
+                        One row per accepted order, one per line item. Prices and costs are stored
+                        as a <strong>snapshot taken at the time of the order</strong>.
+                    </p>
+                    <p class="layer-why">
+                        A carbonara sold in April at £17.00 with a £4.76 cost must still report
+                        those figures in April, even after the menu is repriced in May.
+                    </p>
+                </div>
+
+                <div class="layer">
+                    <span class="layer-tag">Gold</span>
+                    <h3>SQL functions</h3>
+                    <p>
+                        Parameterised PostgreSQL functions, called over RPC, that return
+                        pre-aggregated rows filtered by date, platform and category.
+                    </p>
+                    <p class="layer-why">
+                        The dashboard never pulls raw order rows. It asks a question and gets
+                        an answer back.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="case-section case-highlight">
+            <h2>The bug that shaped the architecture</h2>
+            <p>
+                After seeding the database with 3,000 orders, the dashboard reported 1,000
+                orders and roughly a third of the expected revenue. <strong>No error. No warning.
+                No failed request.</strong>
+            </p>
+            <p>
+                The cause was PostgREST, which caps every <code>.select()</code> at 1,000 rows by
+                default as a denial-of-service safeguard. The dashboard was fetching rows and
+                summing them in JavaScript, so 2,000 orders were being dropped silently —
+                and the numbers on screen were confidently wrong.
+            </p>
+            <p>I considered three fixes:</p>
+            <ol class="case-list case-list-ordered">
+                <li>
+                    <strong>Raise the cap</strong> with <code>.range(0, 9999)</code> — a magic number
+                    that breaks again at 10,001 rows and ships the entire table over the wire on every page load.
+                </li>
+                <li>
+                    <strong>Paginate in a loop</strong> — several round trips, and the same problem
+                    simply relocated to a higher threshold.
+                </li>
+                <li>
+                    <strong>Move aggregation into the database</strong> — a SQL <code>SUM</code>
+                    returns one row no matter how large the table grows.
+                </li>
+            </ol>
+            <p>
+                I took the third. Views first, then parameterised functions once date filtering
+                was needed, since views cannot take arguments.
+            </p>
+            <p class="case-takeaway">
+                Aggregation belongs where the data lives. Postgres was built to do
+                <code>SUM</code>, <code>COUNT</code> and <code>GROUP BY</code>; shipping rows to
+                Node just to add them up is moving data uphill for nothing.
+            </p>
+        </section>
+
+        <section class="case-section">
+            <h2>The webhook pipeline</h2>
+            <p>
+                Every order that arrives is written to the raw layer <em>before</em> anything is
+                parsed, then walked through a sequence where each failure mode has a defined
+                resting state rather than an exception.
+            </p>
+            <ol class="pipeline">
+                <li><span>01</span> Store the raw payload, untouched</li>
+                <li><span>02</span> Ignore update events; only creations proceed</li>
+                <li><span>03</span> Unwrap the HubRise <code>new_state</code> envelope</li>
+                <li><span>04</span> Validate — missing ID or total is <em>rejected</em></li>
+                <li><span>05</span> Check idempotency — a repeat order ID is <em>duplicate</em></li>
+                <li><span>06</span> Look up the platform — an unknown channel is <em>held</em></li>
+                <li><span>07</span> Calculate commission and insert the order</li>
+                <li><span>08</span> Match each item by SKU and snapshot its cost</li>
+            </ol>
+            <p>
+                A duplicate returns <code>200</code>, not an error, so that HubRise does not
+                retry it. An unknown platform is held in the raw layer rather than discarded,
+                so it can be resolved and reprocessed later. Nothing is ever lost because it
+                arrived in an unexpected shape.
+            </p>
+        </section>
+
+        <section class="case-section">
+            <h2>Decisions and trade-offs</h2>
+
+            <div class="decision">
+                <h3>Supabase over raw Postgres</h3>
+                <p>
+                    Started on the raw <code>pg</code> client and migrated within the first sprint.
+                    Supabase brought authentication, row level security, and two clients at two
+                    privilege levels — so the service-role key is never exposed to the browser.
+                    The cost: PostgREST serialises <code>NUMERIC</code> as a JSON string to preserve
+                    decimal precision, so every numeric field crosses into TypeScript through
+                    <code>Number(...)</code>.
+                </p>
+            </div>
+
+            <div class="decision">
+                <h3>Pure logic extracted to <code>lib/</code></h3>
+                <p>
+                    Business logic initially lived inside server components and route handlers,
+                    which import Next.js internals that Vitest cannot load. Pulling the pure
+                    functions into <code>lib/</code> — files that import nothing from Next.js or
+                    Supabase — meant the tests and the application exercise <em>the same</em> function,
+                    not a copy of it. That separation is what made 125 unit tests possible.
+                </p>
+            </div>
+
+            <div class="decision">
+                <h3>Proportional commission allocation</h3>
+                <p>
+                    Platform commission is distributed across an order's items by revenue share,
+                    following standard cost accounting practice, so per-product margins stay
+                    meaningful rather than arbitrary.
+                </p>
+            </div>
+
+            <div class="decision">
+                <h3>A read-only analytics layer</h3>
+                <p>
+                    ProfitLens reads from HubRise and never writes back. The point of sale remains
+                    the source of truth for products and prices; ProfitLens enriches that data with
+                    commission rates and food costs to produce the one number no platform provides.
+                </p>
+            </div>
+        </section>
+
+        <section class="case-section">
+            <h2>What it does not do</h2>
+            <p>
+                Knowing a system's limits matters as much as knowing its features. The
+                significant ones:
+            </p>
+            <ul class="case-list case-list-limits">
+                <li>
+                    <strong>No webhook authentication.</strong> There is no HMAC signature
+                    verification on the endpoint. Acceptable against the HubRise sandbox;
+                    a requirement before any production deployment.
+                </li>
+                <li>
+                    <strong>Sandbox only.</strong> Validated against the HubRise sandbox and Order
+                    Injector, not against live Deliveroo or Uber Eats bridges.
+                </li>
+                <li>
+                    <strong>Unmatched items skew margin.</strong> Items that cannot be matched to the
+                    catalogue are excluded from product breakdowns. Their revenue still counts toward
+                    totals but carries zero cost, which overstates profit.
+                </li>
+                <li>
+                    <strong>Reports are live, not frozen.</strong> A daily report reflects current data
+                    rather than a snapshot locked at the close of that day.
+                </li>
+            </ul>
+        </section>
+
+        <section class="case-section">
+            <h2>Stack</h2>
+            <ul class="stack-list">
+                <li>Next.js 16 (App Router)</li>
+                <li>React 19</li>
+                <li>TypeScript (strict)</li>
+                <li>Supabase / PostgreSQL</li>
+                <li>PostgREST + RPC</li>
+                <li>Tailwind v4</li>
+                <li>Recharts v3</li>
+                <li>Vitest</li>
+                <li>Resend</li>
+                <li>HubRise API</li>
+                <li>Vercel</li>
+            </ul>
+        </section>
+
+        <p class="case-back case-back-end"><a href="projects.html">&larr; Back to all work</a></p>
+    </article>
+</body>
+</html>

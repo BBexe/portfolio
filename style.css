@@ -728,3 +728,381 @@ span{
     }
 }
 
+
+/* ==========================================================================
+   Case study page (profitlens.html)
+   ========================================================================== */
+
+.case{
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 18rem 6% 12rem;
+}
+
+.case-back a{
+    font-size: 1.5rem;
+    color: #8a8a8a;
+    transition: 0.3s ease;
+}
+
+.case-back a:hover{
+    color: var(--main-color);
+}
+
+.case-back-end{
+    margin-top: 8rem;
+    padding-top: 4rem;
+    border-top: 1px solid #262626;
+}
+
+.case-eyebrow{
+    font-family: "Orbitron", sans-serif;
+    font-size: 1.4rem;
+    color: var(--main-color2);
+    margin-top: 4rem;
+}
+
+.case-head h1{
+    font-size: 6rem;
+    font-weight: 600;
+    line-height: 1;
+    margin-top: 1.5rem;
+}
+
+.case-standfirst{
+    font-size: 2rem;
+    line-height: 1.6;
+    color: #c5c5c5;
+    margin-top: 2.5rem;
+    max-width: 65ch;
+}
+
+.case-links{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 3.5rem;
+}
+
+.case-links a:nth-of-type(2){
+    background-color: black;
+    color: var(--main-color);
+    border: 2px solid var(--main-color);
+    box-shadow: 0 0 25px transparent;
+}
+
+.case-links a:nth-of-type(2):hover{
+    background-color: var(--main-color);
+    color: black;
+    box-shadow: 0 0 25px var(--main-color);
+}
+
+.case-meta{
+    list-style: none;
+    margin-top: 3.5rem;
+    display: grid;
+    gap: 1.2rem;
+}
+
+.case-meta li{
+    font-size: 1.6rem;
+    color: #b5b5b5;
+}
+
+.case-meta span{
+    display: inline-block;
+    min-width: 9rem;
+    color: #7a7a7a;
+    font-size: 1.4rem;
+}
+
+.case-stats{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    margin: 6rem 0;
+    padding: 3.5rem 2rem;
+    border-top: 1px solid #262626;
+    border-bottom: 1px solid #262626;
+    text-align: center;
+}
+
+.case-stats strong{
+    display: block;
+    font-family: "Orbitron", sans-serif;
+    font-size: 3.2rem;
+    color: var(--main-color);
+}
+
+.case-stats span{
+    display: block;
+    font-size: 1.4rem;
+    color: #8a8a8a;
+    margin-top: 0.8rem;
+}
+
+.case-section{
+    /* These are <section> elements, so they inherit the global
+       `section { min-height: 100vh; padding: 10rem 12% }` rule. Undo both. */
+    min-height: auto;
+    padding: 0;
+    margin-top: 7rem;
+}
+
+.case-section h2{
+    font-size: 3.2rem;
+    font-weight: 600;
+    margin-bottom: 2.5rem;
+}
+
+.case-section h3{
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+}
+
+.case-section p{
+    font-size: 1.7rem;
+    line-height: 1.8;
+    color: #b5b5b5;
+    margin-bottom: 2rem;
+    max-width: 70ch;
+}
+
+.case-section strong{
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.case-section a{
+    color: var(--main-color2);
+    border-bottom: 1px solid transparent;
+    transition: 0.3s ease;
+}
+
+.case-section a:hover{
+    border-bottom: 1px solid var(--main-color2);
+}
+
+.case-section code{
+    font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+    font-size: 0.88em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 0.4rem;
+    background: var(--second-bg-color);
+    color: var(--main-color);
+}
+
+.case-list{
+    list-style: none;
+    max-width: 70ch;
+}
+
+.case-list li{
+    position: relative;
+    font-size: 1.7rem;
+    line-height: 1.8;
+    color: #b5b5b5;
+    padding-left: 2.6rem;
+    margin-bottom: 1.4rem;
+}
+
+.case-list li::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 1.1rem;
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    background: var(--main-color2);
+}
+
+.case-list-ordered{
+    counter-reset: step;
+}
+
+.case-list-ordered li::before{
+    counter-increment: step;
+    content: counter(step);
+    top: 0;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    background: none;
+    font-family: "Orbitron", sans-serif;
+    font-size: 1.4rem;
+    color: var(--main-color2);
+}
+
+.case-list-limits li::before{
+    background: #ff6b6b;
+}
+
+/* Three data layers, side by side */
+.layer-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.layer{
+    padding: 2.8rem 2.4rem;
+    background: var(--second-bg-color);
+    border: 1px solid #262626;
+    border-radius: 1.2rem;
+}
+
+.layer-tag{
+    font-family: "Orbitron", sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.1rem;
+    color: var(--main-color2);
+    text-transform: uppercase;
+}
+
+.layer h3{
+    font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+    font-size: 1.6rem;
+    margin-top: 1rem;
+    color: var(--text-color);
+}
+
+.layer p{
+    font-size: 1.5rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+.layer-why{
+    padding-top: 1.5rem;
+    border-top: 1px solid #262626;
+    color: #8a8a8a;
+    font-style: italic;
+    margin-bottom: 0;
+}
+
+/* The war-story section gets a subtle lift off the page */
+.case-highlight{
+    padding: 4rem;
+    background: linear-gradient(160deg, rgba(216,206,253,0.05), transparent 70%);
+    border: 1px solid #262626;
+    border-radius: 1.6rem;
+}
+
+.case-takeaway{
+    padding: 2rem 2.5rem;
+    border-left: 3px solid var(--main-color);
+    background: rgba(216,206,253,0.05);
+    color: var(--text-color) !important;
+    margin-bottom: 0 !important;
+}
+
+.pipeline{
+    list-style: none;
+    margin: 3rem 0;
+    display: grid;
+    gap: 0;
+}
+
+.pipeline li{
+    display: flex;
+    align-items: baseline;
+    gap: 2rem;
+    font-size: 1.6rem;
+    color: #b5b5b5;
+    padding: 1.6rem 1rem;
+    border-bottom: 1px solid #1e1e1e;
+}
+
+.pipeline li span{
+    font-family: "Orbitron", sans-serif;
+    font-size: 1.3rem;
+    color: var(--main-color2);
+}
+
+.pipeline li em{
+    color: var(--main-color);
+    font-style: normal;
+    font-weight: 600;
+}
+
+.decision{
+    padding: 2.8rem 0;
+    border-top: 1px solid #262626;
+}
+
+.decision p{
+    margin-bottom: 0;
+}
+
+.stack-list{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    list-style: none;
+    margin-top: 1rem;
+}
+
+.stack-list li{
+    font-size: 1.4rem;
+    padding: 0.7rem 1.6rem;
+    border: 1px solid var(--main-color2);
+    border-radius: 4rem;
+    color: var(--main-color2);
+}
+
+@media (max-width: 991px){
+    .case-stats{
+        grid-template-columns: repeat(2, 1fr);
+        gap: 3rem 2rem;
+    }
+
+    .layer-grid{
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px){
+    .case{
+        padding: 5rem 6% 8rem;
+    }
+
+    .case-head h1{
+        font-size: 4rem;
+    }
+
+    .case-standfirst{
+        font-size: 1.8rem;
+    }
+
+    .case-section h2{
+        font-size: 2.6rem;
+    }
+
+    .case-highlight{
+        padding: 2.5rem 2rem;
+    }
+
+    .case-links a{
+        flex: 1 1 100%;
+        text-align: center;
+    }
+}
+
+.project-more{
+    margin-top: 2rem;
+}
+
+.project-more a{
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--main-color);
+    border-bottom: 1px solid transparent;
+    transition: 0.3s ease;
+}
+
+.project-more a:hover{
+    border-bottom: 1px solid var(--main-color);
+}
